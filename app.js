@@ -1,8 +1,19 @@
 const express = require("express");
 const app = express();
 
-app.get("/", (req, res) => res.send("Thank you for visiting the server"));
-app.get("/books", (req, res) => res.send("Here are the books"));
-app.post("/books", (req, res) => res.send("You have created a new book"));
+app.use(express.json());
+
+const middleware = (req, res, next) => {
+  console.log("hello");
+  next();
+};
+
+app.use(middleware);
+
+const index = require("./routes/index");
+app.use("/", index);
+
+const books = require("./routes/books");
+app.use("/books", books);
 
 module.exports = app;
