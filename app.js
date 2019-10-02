@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 
+//required to use with req.body
 app.use(express.json());
 
 const middleware = (req, res, next) => {

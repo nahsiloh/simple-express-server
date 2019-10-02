@@ -8,6 +8,7 @@ class Book {
       { id: 5, title: "Introduction to React", author: "Esther" }
     ];
   }
+
   getAllBooks() {
     return this.books;
   }
@@ -16,8 +17,12 @@ class Book {
     return this.books.find(book => book.id === bookId);
   }
 
-  addNewBook(newBook) {
-    return this.books.push(newBook);
+  addBook(newBook) {
+    this.books.push(newBook);
+  }
+
+  filterBooks(key, query) {
+    return this.books.filter(book => book[key].includes(query));
   }
 }
 

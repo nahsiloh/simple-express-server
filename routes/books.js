@@ -3,7 +3,16 @@ const router = express.Router();
 
 const book = require("../models/Book");
 
-router.get("", (req, res) => res.send(book.getAllBooks()));
+router.get("/", (req, res) => {
+  const { author, title } = req.query;
+  if (author) {
+    res.send(book.filterBooks("author", author));
+  }
+  if (title) {
+    res.send(book.filterBooks("title", title));
+  }
+  res.send(book.getAllBooks());
+});
 
 router.get("/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -12,7 +21,7 @@ router.get("/:id", (req, res) => {
 
 router.post("/new", (req, res) => {
   const newBook = req.body;
-  book.addNewBook(newBook);
+  book.addBook(newBook);
   res.send(newBook);
 });
 
