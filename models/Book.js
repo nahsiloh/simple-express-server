@@ -21,8 +21,26 @@ class Book {
     this.books.push(newBook);
   }
 
-  filterBooks(key, query) {
-    return this.books.filter(book => book[key].includes(query));
+  filterBooks(keys, query) {
+    return this.books.filter(book => book[keys].includes(query));
+  }
+
+  filterBooksByTwoKeys(key1, query1, key2, query2) {
+    return this.books
+      .filter(book => book[key1].includes(query1))
+      .filter(book => book[key2].includes(query2));
+  }
+
+  updateBook(newUpdate) {
+    const checkBook = id => {
+      return this.getBookById(id);
+    };
+    const bookIndex = this.books.findIndex(checkBook);
+    this.books[bookIndex] = newUpdate;
+  }
+
+  deleteBook(bookId) {
+    return this.books.filter(book => book.bookId !== bookId);
   }
 }
 

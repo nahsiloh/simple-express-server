@@ -5,11 +5,17 @@ const book = require("../models/Book");
 
 router.get("/", (req, res) => {
   const { author, title } = req.query;
+
+  if (author && title) {
+    res.send(book.filterBooksByTwoKeys("author", author, "title", title));
+  }
   if (author) {
-    res.send(book.filterBooks("author", author));
+    const getBookByAuthor = book.filterBooks("author", author);
+    res.send(getBookByAuthor);
   }
   if (title) {
-    res.send(book.filterBooks("title", title));
+    const getBookByTitle = book.filterBooks("title", title);
+    res.send(getBookByTitle);
   }
   res.send(book.getAllBooks());
 });
@@ -17,6 +23,19 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   const id = Number(req.params.id);
   res.send(book.getBookById(id));
+});
+
+router.put("/:id", (req, res) => {
+  const id = Number(req.params.id);
+  book.getBookById(id);
+  const newUpdate = req.body;
+  book.updateBook(newUpdate);
+  res.send(newUpdate);
+});
+
+router.delete("/:id", (req, res) => {
+  const id = Number(req.params.id);
+  res.send(book.deleteBook(id));
 });
 
 router.post("/new", (req, res) => {
