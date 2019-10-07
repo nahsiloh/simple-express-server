@@ -25,12 +25,18 @@ router.get("/:id", (req, res) => {
   res.send(book.getBookById(id));
 });
 
-router.put("/:id", (req, res) => {
-  const id = Number(req.params.id);
-  book.getBookById(id);
-  const newUpdate = req.body;
-  book.updateBook(newUpdate);
-  res.send(newUpdate);
+router.put("/:id", (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const newUpdate = req.body;
+    book.updateBook(id, newUpdate);
+    res.send(newUpdate);
+    // } catch (error) {
+    //   res.status(404).send(error.message);
+  } catch (err) {
+    err.status = 404;
+    next(err);
+  }
 });
 
 router.delete("/:id", (req, res) => {

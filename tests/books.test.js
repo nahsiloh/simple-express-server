@@ -39,6 +39,7 @@ describe("/books", () => {
         .expect(200)
         .expect({ id: 2, title: "Javascript 101", author: "Ben" });
     });
+
     it("?author=David", () => {
       book.filterBooks.mockReturnValueOnce([mockData[1]]);
       return request(app)
@@ -97,7 +98,7 @@ describe("/books", () => {
   describe("[PUT]/books", () => {
     it("should check that update() has been called", () => {
       const newUpdate = {
-        id: 6,
+        id: 1,
         title: "Talking to strangers",
         author: "Faith"
       };
@@ -105,15 +106,33 @@ describe("/books", () => {
         .put("/books/1")
         .send(newUpdate)
         .expect(200)
-        .expect({ id: 6, title: "Talking to strangers", author: "Faith" });
+        .expect({ id: 1, title: "Talking to strangers", author: "Faith" })
+        .expect(() => {
+          expect(book.updateBook).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    it("should return 404 when id is not found", () => {
+      book.updateBook.mockImplementation(() => {
+        throw new Error();
+      });
+      return request(app)
+        .put("/books/9000")
+        .expect(404);
     });
   });
 
   describe("[DELETE]/books", () => {
-    it("should check that update() has been called", () => {
+    book.deleteBook.mockReturnValueOnce([mockData[1], mockData[2]]);
+
+    it("should check that delete() has been called", () => {
       return request(app)
         .delete("/books/1")
-        .expect(200);
+        .expect(200)
+        .expect([
+          { id: 2, title: "Javascript 101", author: "Ben" },
+          { id: 3, title: "Coding 101", author: "Chris" }
+        ]);
     });
   });
 });
